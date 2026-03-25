@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chabad Show | חב"ד שואו</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300&family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --gold: #C9972B;
+      --gold-light: #E8C46A;
+      --gold-pale: #F5E6C0;
+      --navy: #0D1B2A;
+      --navy-mid: #162435;
+      --navy-soft: #1E3048;
+      --cream: #FDF6EC;
+      --text-light: #F5EFE0;
+      --text-muted: #A89070;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--navy);
+      color: var(--text-light);
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 18px;
+      overflow-x: hidden;
+      transition: font-family 0.3s;
+    }
+
+    body.hebrew {
+      font-family: 'Heebo', sans-serif;
+      direction: rtl;
+    }
+
+    /* ─── NOISE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ─── LANG TOGGLE ─── */
+    .lang-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 14px 40px;
+      background: linear-gradient(to bottom, rgba(13,27,42,0.95), transparent);
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 6px 20px;
+      font-family: 'Heebo', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+    .lang-btn:hover {
+      background: var(--gold);
+      color: var(--navy);
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 80px 40px 60px;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 50%, rgba(201,151,43,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse at 75% 20%, rgba(201,151,43,0.10) 0%, transparent 50%),
+        linear-gradient(160deg, var(--navy) 0%, var(--navy-mid) 50%, #0a1520 100%);
+      z-index: 0;
+    }
+
+    .star-of-david {
+      position: absolute;
+      opacity: 0.04;
+      font-size: 480px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      line-height: 1;
+      z-index: 0;
+      animation: pulse 8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.04; transform: translate(-50%, -50%) scale(1); }
+      50% { opacity: 0.07; transform: translate(-50%, -50%) scale(1.05); }
+    }
+
+    .hero-content { position: relative; z-index: 1; }
+
+    .hero-eyebrow {
+      font-family: 'Heebo', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+      animation: fadeUp 1s ease both;
+    }
+
+    .hero-title-en {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: clamp(64px, 10vw, 120px);
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+      color: var(--cream);
+      animation: fadeUp 1s 0.15s ease both;
+    }
+
+    .hero-title-he {
+      font-family: 'Heebo', sans-serif;
+      font-weight: 900;
+      font-size: clamp(52px, 8vw, 100px);
+      line-height: 0.95;
+      color: var(--cream);
+      display: none;
+      animation: fadeUp 1s 0.15s ease both;
+    }
+
+    .hero-title-accent {
+      color: var(--gold);
+      display: block;
+    }
+
+    .hero-divider {
+      width: 80px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      margin: 32px auto;
+      animation: fadeIn 1s 0.3s ease both;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(16px, 2.5vw, 22px);
+      font-style: italic;
+      color: var(--text-muted);
+      max-width: 500px;
+      line-height: 1.6;
+      animation: fadeUp 1s 0.4s ease both;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 48px;
+      padding: 16px 40px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: var(--navy);
+      font-family: 'Heebo', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 2px;
+      animation: fadeUp 1s 0.55s ease both;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .hero-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(201,151,43,0.35);
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      font-family: 'Heebo', sans-serif;
+      animation: fadeIn 2s 1s ease both;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollDrop 2s 1.5s ease infinite;
+    }
+    @keyframes scrollDrop {
+      0% { transform: scaleY(0); transform-origin: top; }
+      50% { transform: scaleY(1); transform-origin: top; }
+      51% { transform: scaleY(1); transform-origin: bottom; }
+      100% { transform: scaleY(0); transform-origin: bottom; }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* ─── SECTIONS COMMON ─── */
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 100px 40px;
+    }
+
+    .section-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-tag {
+      font-family: 'Heebo', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: clamp(36px, 5vw, 58px);
+      line-height: 1.1;
+      color: var(--cream);
+      margin-bottom: 24px;
+    }
+
+    body.hebrew .section-title {
+      font-family: 'Heebo', sans-serif;
+      font-weight: 900;
+    }
+
+    /* ─── ABOUT ─── */
+    .about {
+      background: linear-gradient(160deg, var(--navy-mid) 0%, var(--navy) 100%);
+      border-top: 1px solid rgba(201,151,43,0.15);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .about-text p {
+      color: var(--text-muted);
+      font-size: 17px;
+      line-height: 1.9;
+      margin-bottom: 20px;
+    }
+
+    body.hebrew .about-text p {
+      font-family: 'Heebo', sans-serif;
+      font-size: 16px;
+    }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+    }
+
+    .stat-card {
+      background: var(--navy-soft);
+      padding: 36px 28px;
+      border: 1px solid rgba(201,151,43,0.12);
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(to right, var(--gold), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .stat-card:hover { border-color: rgba(201,151,43,0.35); }
+    .stat-card:hover::before { opacity: 1; }
+
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: 48px;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .stat-label {
+      font-family: 'Heebo', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    /* ─── THEMES ─── */
+    .themes {
+      background: var(--navy);
+    }
+
+    .themes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-top: 56px;
+    }
+
+    .theme-card {
+      background: var(--navy-soft);
+      padding: 48px 36px;
+      border: 1px solid rgba(201,151,43,0.1);
+      position: relative;
+      overflow: hidden;
+      cursor: default;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+    .theme-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(201,151,43,0.3);
+    }
+
+    .theme-icon {
+      font-size: 36px;
+      margin-bottom: 20px;
+      display: block;
+    }
+    .theme-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: var(--cream);
+      margin-bottom: 12px;
+    }
+    body.hebrew .theme-title {
+      font-family: 'Heebo', sans-serif;
+      font-weight: 700;
+    }
+    .theme-desc {
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+    body.hebrew .theme-desc {
+      font-family: 'Heebo', sans-serif;
+    }
+
+    /* ─── INSTAGRAM ─── */
+    .instagram {
+      background: linear-gradient(160deg, var(--navy-mid) 0%, var(--navy) 100%);
+      border-top: 1px solid rgba(201,151,43,0.15);
+      text-align: center;
+    }
+
+    .ig-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 48px;
+      padding: 20px 48px;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-family: 'Heebo', sans-serif;
+      font-size: 14px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .ig-link::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gold);
+      transform: translateX(-100%);
+      transition: transform 0.3s;
+      z-index: -1;
+    }
+    .ig-link:hover {
+      color: var(--navy);
+    }
+    .ig-link:hover::before {
+      transform: translateX(0);
+    }
+
+    .ig-preview {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 3px;
+      margin-top: 56px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .ig-thumb {
+      aspect-ratio: 1;
+      background: var(--navy-soft);
+      border: 1px solid rgba(201,151,43,0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: rgba(201,151,43,0.3);
+      font-size: 28px;
+      transition: all 0.3s;
+    }
+    .ig-thumb:hover {
+      background: var(--navy-mid);
+      border-color: rgba(201,151,43,0.35);
+      color: var(--gold);
+    }
+    .ig-thumb span {
+      font-family: 'Heebo', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+    }
+
+    /* ─── CONTACT ─── */
+    .contact {
+      background: var(--navy);
+      text-align: center;
+      border-top: 1px solid rgba(201,151,43,0.15);
+    }
+
+    .contact-form {
+      max-width: 560px;
+      margin: 56px auto 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      background: var(--navy-soft);
+      border: 1px solid rgba(201,151,43,0.2);
+      color: var(--text-light);
+      padding: 16px 20px;
+      font-family: 'Heebo', sans-serif;
+      font-size: 14px;
+      border-radius: 2px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      border-color: var(--gold);
+    }
+    .contact-form input::placeholder,
+    .contact-form textarea::placeholder {
+      color: var(--text-muted);
+    }
+    .contact-form textarea {
+      height: 130px;
+      resize: vertical;
+    }
+
+    .submit-btn {
+      padding: 18px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: var(--navy);
+      border: none;
+      font-family: 'Heebo', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+    .submit-btn:hover {
+      box-shadow: 0 8px 32px rgba(201,151,43,0.35);
+      transform: translateY(-1px);
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: #070e17;
+      padding: 40px;
+      text-align: center;
+      border-top: 1px solid rgba(201,151,43,0.1);
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: 28px;
+      color: var(--gold);
+      letter-spacing: 0.05em;
+      margin-bottom: 16px;
+    }
+    body.hebrew .footer-logo {
+      font-family: 'Heebo', sans-serif;
+    }
+    .footer-copy {
+      font-family: 'Heebo', sans-serif;
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      section { padding: 70px 24px; }
+      .about-grid { grid-template-columns: 1fr; gap: 48px; }
+      .themes-grid { grid-template-columns: 1fr; }
+      .ig-preview { grid-template-columns: repeat(2, 1fr); }
+      .form-row { grid-template-columns: 1fr; }
+      .lang-bar { padding: 14px 24px; }
+      .hero { padding: 100px 24px 80px; }
+    }
+  </style>
+</head>
+<body id="body">
+
+  <!-- LANG TOGGLE -->
+  <div class="lang-bar">
+    <button class="lang-btn" id="langBtn" onclick="toggleLang()">עברית</button>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="star-of-david">✡</div>
+    <div class="hero-content">
+      <p class="hero-eyebrow" data-en="Where Torah Meets Culture" data-he="שם תורה פוגשת תרבות">Where Torah Meets Culture</p>
+
+      <h1 class="hero-title-en">
+        Chabad<br>
+        <span class="hero-title-accent">Show</span>
+      </h1>
+      <h1 class="hero-title-he" style="display:none;">
+        חב"ד<br>
+        <span class="hero-title-accent">שואו</span>
+      </h1>
+
+      <div class="hero-divider"></div>
+
+      <p class="hero-subtitle" data-en="Music, wisdom, and the joy of Jewish living — brought to life." data-he="מוזיקה, חוכמה ושמחה של החיים היהודיים — מחיים ונושמים.">
+        Music, wisdom, and the joy of Jewish living — brought to life.
+      </p>
+
+      <a href="https://www.instagram.com/chabad_show/" target="_blank" class="hero-cta" id="heroCta">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        <span data-en="Follow on Instagram" data-he="עקבו באינסטגרם">Follow on Instagram</span>
+      </a>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="section-inner">
+      <div class="about-grid">
+        <div class="about-text">
+          <p class="section-tag" data-en="About the Show" data-he="אודות התוכנית">About the Show</p>
+          <h2 class="section-title" data-en="A Show Like No Other" data-he="תוכנית כמו שלא היה">A Show Like No Other</h2>
+          <p data-en="Chabad Show is a vibrant platform celebrating the beauty of Jewish life — through music, Torah insights, heartfelt conversations, and the warm spirit of Chabad." data-he="חב&quot;ד שואו הוא במה תוססת המציינת את יופי החיים היהודיים — דרך מוזיקה, תובנות תורניות, שיחות מעמיקות ורוח חמה של חב&quot;ד.">Chabad Show is a vibrant platform celebrating the beauty of Jewish life — through music, Torah insights, heartfelt conversations, and the warm spirit of Chabad.</p>
+          <p data-en="Whether you're discovering your roots or deepening your journey, there's always a place for you at our table." data-he="בין אם אתה מגלה את שורשיך או מעמיק את דרכך — תמיד יש מקום בשבילך ליד השולחן שלנו.">Whether you're discovering your roots or deepening your journey, there's always a place for you at our table.</p>
+        </div>
+        <div class="about-stats">
+          <div class="stat-card">
+            <div class="stat-num">∞</div>
+            <div class="stat-label" data-en="EPISODES & GROWING" data-he="פרקים ויותר">EPISODES & GROWING</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">2</div>
+            <div class="stat-label" data-en="LANGUAGES" data-he="שפות">LANGUAGES</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">1</div>
+            <div class="stat-label" data-en="COMMUNITY" data-he="קהילה אחת">COMMUNITY</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">❤</div>
+            <div class="stat-label" data-en="MADE WITH LOVE" data-he="עשוי באהבה">MADE WITH LOVE</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THEMES -->
+  <section class="themes" id="content">
+    <div class="section-inner">
+      <p class="section-tag" data-en="What We Cover" data-he="מה אנחנו מכסים">What We Cover</p>
+      <h2 class="section-title" data-en="Every Episode, A New World" data-he="כל פרק, עולם חדש">Every Episode, A New World</h2>
+      <div class="themes-grid">
+        <div class="theme-card">
+          <span class="theme-icon">🎵</span>
+          <h3 class="theme-title" data-en="Music & Soul" data-he="מוזיקה ונשמה">Music & Soul</h3>
+          <p class="theme-desc" data-en="From niggunim to modern Jewish music — we explore the melodies that move the soul and connect generations." data-he="מניגונים ועד מוזיקה יהודית מודרנית — אנחנו חוקרים את המנגינות שמרגשות את הנשמה ומחברות דורות.">From niggunim to modern Jewish music — we explore the melodies that move the soul and connect generations.</p>
+        </div>
+        <div class="theme-card">
+          <span class="theme-icon">📖</span>
+          <h3 class="theme-title" data-en="Torah & Wisdom" data-he="תורה וחוכמה">Torah & Wisdom</h3>
+          <p class="theme-desc" data-en="Deep dives into Chassidic teachings, parsha insights, and the timeless wisdom of our tradition — made accessible for everyone." data-he="צלילה עמוקה לתורת החסידות, פרשת השבוע ותבונת המסורת — בשפה פשוטה לכולם.">Deep dives into Chassidic teachings, parsha insights, and the timeless wisdom of our tradition — made accessible for everyone.</p>
+        </div>
+        <div class="theme-card">
+          <span class="theme-icon">✨</span>
+          <h3 class="theme-title" data-en="Jewish Lifestyle" data-he="אורח חיים יהודי">Jewish Lifestyle</h3>
+          <p class="theme-desc" data-en="Shabbat, holidays, culture, food, and stories of real people living beautifully Jewish lives around the world." data-he="שבת, חגים, תרבות, אוכל וסיפורים של אנשים אמיתיים החיים חיים יהודיים יפים ברחבי העולם.">Shabbat, holidays, culture, food, and stories of real people living beautifully Jewish lives around the world.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSTAGRAM -->
+  <section class="instagram" id="instagram">
+    <div class="section-inner">
+      <p class="section-tag" data-en="Follow Along" data-he="עקבו אחרינו">Follow Along</p>
+      <h2 class="section-title" data-en="Find Us on Instagram" data-he="מצאו אותנו באינסטגרם">Find Us on Instagram</h2>
+      <p style="color:var(--text-muted); max-width:480px; margin:0 auto;" data-en="Follow @chabad_show for daily content, behind-the-scenes moments, and the latest episodes." data-he="עקבו אחרי @chabad_show לתוכן יומי, רגעים מאחורי הקלעים והפרקים האחרונים.">
+        Follow @chabad_show for daily content, behind-the-scenes moments, and the latest episodes.
+      </p>
+
+      <div class="ig-preview">
+        <div class="ig-thumb">📸<span data-en="Latest post" data-he="פוסט אחרון">Latest post</span></div>
+        <div class="ig-thumb">🎬<span data-en="Reel" data-he="ריל">Reel</span></div>
+        <div class="ig-thumb">🎵<span data-en="Music" data-he="מוזיקה">Music</span></div>
+        <div class="ig-thumb">✡️<span data-en="Torah" data-he="תורה">Torah</span></div>
+      </div>
+
+      <a href="https://www.instagram.com/chabad_show/" target="_blank" class="ig-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        <span data-en="@chabad_show" data-he="@chabad_show">@chabad_show</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="section-inner">
+      <p class="section-tag" data-en="Get in Touch" data-he="צרו קשר">Get in Touch</p>
+      <h2 class="section-title" data-en="We'd Love to Hear From You" data-he="נשמח לשמוע מכם">We'd Love to Hear From You</h2>
+      <p style="color:var(--text-muted); max-width:440px; margin:0 auto;" data-en="Collaborations, appearances, or just saying Shalom — our inbox is always open." data-he="שיתופי פעולה, הופעות, או פשוט להגיד שלום — תיבת הדואר שלנו תמיד פתוחה.">
+        Collaborations, appearances, or just saying Shalom — our inbox is always open.
+      </p>
+      <form class="contact-form" onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <input type="text" id="nameInput" placeholder="Your Name" />
+          <input type="email" id="emailInput" placeholder="Your Email" />
+        </div>
+        <input type="text" id="subjectInput" placeholder="Subject" />
+        <textarea id="messageInput" placeholder="Your Message..."></textarea>
+        <button type="submit" class="submit-btn" data-en="SEND MESSAGE" data-he="שלח הודעה">SEND MESSAGE</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo" id="footerLogo">Chabad Show ✡</div>
+    <p class="footer-copy" data-en="© 2025 Chabad Show · All Rights Reserved · Made with ❤ and Torah" data-he="© 2025 חב&quot;ד שואו · כל הזכויות שמורות · עשוי עם ❤ ותורה">© 2025 Chabad Show · All Rights Reserved · Made with ❤ and Torah</p>
+  </footer>
+
+  <script>
+    let isHebrew = false;
+
+    function toggleLang() {
+      isHebrew = !isHebrew;
+      const body = document.getElementById('body');
+      const btn = document.getElementById('langBtn');
+
+      if (isHebrew) {
+        body.classList.add('hebrew');
+        document.documentElement.setAttribute('lang', 'he');
+        document.documentElement.setAttribute('dir', 'rtl');
+        btn.textContent = 'English';
+
+        // Show/hide titles
+        document.querySelector('.hero-title-en').style.display = 'none';
+        document.querySelector('.hero-title-he').style.display = 'block';
+        document.getElementById('footerLogo').textContent = 'חב"ד שואו ✡';
+
+        // Update all data-he elements
+        document.querySelectorAll('[data-he]').forEach(el => {
+          el.innerHTML = el.getAttribute('data-he');
+        });
+
+        // Update form placeholders
+        document.getElementById('nameInput').placeholder = 'שמך';
+        document.getElementById('emailInput').placeholder = 'כתובת מייל';
+        document.getElementById('subjectInput').placeholder = 'נושא';
+        document.getElementById('messageInput').placeholder = 'הודעתך...';
+
+      } else {
+        body.classList.remove('hebrew');
+        document.documentElement.setAttribute('lang', 'en');
+        document.documentElement.setAttribute('dir', 'ltr');
+        btn.textContent = 'עברית';
+
+        document.querySelector('.hero-title-en').style.display = 'block';
+        document.querySelector('.hero-title-he').style.display = 'none';
+        document.getElementById('footerLogo').textContent = 'Chabad Show ✡';
+
+        document.querySelectorAll('[data-en]').forEach(el => {
+          el.innerHTML = el.getAttribute('data-en');
+        });
+
+        document.getElementById('nameInput').placeholder = 'Your Name';
+        document.getElementById('emailInput').placeholder = 'Your Email';
+        document.getElementById('subjectInput').placeholder = 'Subject';
+        document.getElementById('messageInput').placeholder = 'Your Message...';
+      }
+    }
+
+    function handleSubmit(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('.submit-btn');
+      btn.textContent = isHebrew ? '✓ נשלח!' : '✓ Sent!';
+      btn.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
+      setTimeout(() => {
+        btn.textContent = isHebrew ? 'שלח הודעה' : 'SEND MESSAGE';
+        btn.style.background = 'linear-gradient(135deg, var(--gold), var(--gold-light))';
+        e.target.reset();
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
